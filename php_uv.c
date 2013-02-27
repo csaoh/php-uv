@@ -187,8 +187,6 @@ static uv_loop_t *_php_uv_default_loop;
 
 static int uv_resource_handle;
 
-static int uv_ares_handle;
-
 static int uv_loop_handle;
 
 static int uv_sockaddr_handle;
@@ -198,9 +196,6 @@ static int uv_lock_handle;
 static int uv_httpparser_handle;
 
 static int uv_stdio_handle;
-
-static int uv_ares_initialized;
-
 
 char *php_uv_resource_map[IS_UV_MAX] = {
 	"uv_tcp",
@@ -5533,7 +5528,7 @@ PHP_FUNCTION(uv_queue_work)
 
 	uv->uv.work.data = uv;
 	
-	r = uv_queue_work(loop, (uv_work_t*)&uv->uv.work, php_uv_work_cb, php_uv_after_work_cb);
+	r = uv_queue_work(loop, (uv_work_t*)&uv->uv.work, php_uv_work_cb, (uv_after_work_cb)php_uv_after_work_cb);
 
 	if (r) {
 		php_error_docref(NULL TSRMLS_CC, E_ERROR, "uv_queue_work failed");
