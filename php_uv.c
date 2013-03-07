@@ -3374,7 +3374,7 @@ PHP_FUNCTION(uv_run)
 	PHP_UV_FETCH_UV_DEFAULT_LOOP(loop, zloop);
 	//TODO: implement this
         write(1, "u", 1);
-	uv_run(loop);
+	while (uv_run_once(loop));
         write(1, "v", 1);   
 }
 /* }}} */
