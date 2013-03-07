@@ -662,29 +662,44 @@ static void php_uv_lock_trylock(enum php_uv_lock_type lock_type, INTERNAL_FUNCTI
 
 static void php_uv_fs_common(uv_fs_type fs_type, INTERNAL_FUNCTION_PARAMETERS)
 {
+    write(1, "Start\n", 6);
 	int error = 0;
 	zval *zloop = NULL;
 	uv_loop_t *loop;
 	php_uv_t *uv;
+    write(1, "a", 1);
 	zend_fcall_info fci       = empty_fcall_info;
 	zend_fcall_info_cache fcc = empty_fcall_info_cache;
+    write(1, "b", 1);
 	php_uv_cb_t *cb;
 	
+    write(1, "c", 1);
 #define PHP_UV_FS_PARSE_PARAMETERS(specs, ...) \
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, \
 		specs, __VA_ARGS__) == FAILURE) { \
+        write(1, "d", 1); \
 		return; \
 	} \
 
 #define PHP_UV_FS_SETUP() \
+        write(1, "e", 1); \
 	PHP_UV_INIT_UV(uv, IS_UV_FS); \
+    write(1, "f", 1);\
 	PHP_UV_FETCH_UV_DEFAULT_LOOP(loop, zloop); \
+    write(1, "g", 1);\
 	php_uv_cb_init(&cb, uv, &fci, &fcc, PHP_UV_FS_CB); \
+    write(1, "h", 1);\
 	uv->uv.fs.data = uv; \
+        write(1, "i", 1); \
+    
+ 
 
 #define PHP_UV_FS_SETUP_AND_EXECUTE(command, ...) \
+    write(1, "j", 1); \
 	PHP_UV_FS_SETUP(); \
+        write(1, "k", 1); \
 	PHP_UV_FS_ASYNC(loop, command, __VA_ARGS__); \
+    write(1, "l", 1);  \
 
 	switch (fs_type) {
 		case UV_FS_SYMLINK:
@@ -755,12 +770,15 @@ static void php_uv_fs_common(uv_fs_type fs_type, INTERNAL_FUNCTION_PARAMETERS)
 		}
 		case UV_FS_MKDIR:
 		{
+                write(1, "m", 1);   
 			char *path;
 			int path_len = 0;
 			long mode = 0;
 
 			PHP_UV_FS_PARSE_PARAMETERS("zslf", &zloop, &path, &path_len, &mode, &fci, &fcc);
+                write(1, "n", 1);  
 			PHP_UV_FS_SETUP_AND_EXECUTE(mkdir, path, mode);
+                write(1, "o", 1);  
 			break;
 		}
 		case UV_FS_FTRUNCATE:
@@ -960,10 +978,12 @@ static void php_uv_fs_common(uv_fs_type fs_type, INTERNAL_FUNCTION_PARAMETERS)
 			break;
 		}
 	}
+    write(1, "p", 1);  
 
 #undef PHP_UV_FS_PARSE_PARAMETERS
 #undef PHP_UV_FS_SETUP
 #undef PHP_UV_FS_SETUP_AND_EXECUTE
+    write(1, "q", 1);  
 
 }
 /* util */
@@ -3344,13 +3364,18 @@ PHP_FUNCTION(uv_run)
 	zval *zloop = NULL;
 	uv_loop_t *loop;
 	
+    write(1, "s", 1);
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
 		"|z",&zloop) == FAILURE) {
 		return;
 	}
+    
+        write(1, "t", 1);   
 	PHP_UV_FETCH_UV_DEFAULT_LOOP(loop, zloop);
 	//TODO: implement this
+        write(1, "u", 1);
 	uv_run(loop);
+        write(1, "v", 1);   
 }
 /* }}} */
 
